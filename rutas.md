@@ -61,6 +61,7 @@ pandoc-latex-environment:
 
 ...
 # Pròleg
+
 Las rutas `routes` son un mecanismo que permite a Laravel establecer qué respuesta enviar a una petición que intenta acceder a una determinada URL. Estas rutas se especifican en diferentes archivos dentro de la carpeta routes de nuestro proyecto Laravel.
 
 Podríamos decir que existen dos tipos principales de rutas: 
@@ -135,7 +136,9 @@ En ocasiones puede ser conveniente asociar un nombre a una ruta. Especialmente, 
 Para ello, al definir la ruta, le asociamos con la función `name` el nombre que queramos. Por ejemplo:
 
 ````php
-Route::get('contacto', function() {     return "Página de contacto"; })->name('ruta_contacto'); 
+Route::get('contacto', function() {     
+   return "Página de contacto"; 
+})->name('ruta_contacto'); 
 ``````
 Ahora, si queremos definir un enlace a esta ruta en cualquier parte, basta con emplear la función route de Laravel, indicando el nombre que le hemos asignado a esta ruta. Por lo tanto, en lugar de poner esto:
 ````php

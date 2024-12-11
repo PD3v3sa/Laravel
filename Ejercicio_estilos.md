@@ -111,3 +111,10 @@ $cortos = [
 \centering
 \subfigure[cortos]{\includegraphics[width=1\linewidth]{../img/cortos.png}}
 \end{figure}
+
+
+Pulsar el botón y que aprezca :
+\begin{figure}
+\centering
+\subfigure[detalle]{\includegraphics[width=1\linewidth]{../img/detalle.png}}
+\end{figure}

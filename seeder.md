@@ -60,6 +60,7 @@ pandoc-latex-environment:
 
 
 ...
+
 En las pruebas que hemos hecho hasta ahora, para tener datos con que probar la aplicación, nos hemos limitado a añadirlos a mano desde phpMyAdmin, o bien desde el código con algunos datos simples como “Título de prueba 1” o cosas similares.
 
 Dado que los datos de inicio son necesarios para probar algunas funcionalidades básicas de la aplicación, como son las búsquedas y filtrados, y dado que los formularios para dar de alta y gestionar estos datos normalmente no se tienen listos hasta etapas más tardías, puede resultar conveniente disponer de algún mecanismo que genere estos datos de prueba al inicio, sin preocuparnos de tocar la base de datos a mano o alterar el código de la aplicación para ello. En este aspecto, los seeders juegan un papel importante.
