@@ -282,6 +282,7 @@ Con la ip particuler de cada equipo...
 
 Conectando a la URL que se nos facilita, veremos la pantalla de inicio de nuestro proyecto, que será algo así (aunque el diseño de la página de inicio puede variar dependiendo de la versión de Laravel que usemos):
 
+
 \begin{figure}
 \centering
 \subfigure[welcome]{\includegraphics[width=0.6\linewidth]{../img/welcome.png}}

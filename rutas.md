@@ -102,6 +102,7 @@ Route::get('fecha', function() {
    return date("d/m/y h:i:s");
     }); 
 ````
+
 # Rutas con parámetros
 Es también posible pasar **parámetros en la URL** de la ruta. Para ello, incluimos el nombre del parámetro entre llaves, y lo pasamos también a la función del segundo parámetro. Por ejemplo, si definimos una ruta para saludar al nombre que nos llega como parámetro, el código quedaría así:
 ````php
@@ -115,7 +116,7 @@ En este caso, si el parámetro es obligatorio y no lo indicamos en la URL, nos r
 Route::get('saludo/{nombre?}', function($nombre = "Invitado") { 
        return "Hola, " . $nombre; 
       });
-``````
+````
 
 # Validación de parámetros
 
@@ -130,7 +131,7 @@ En el caso del nombre anterior, si queremos que sólo contenga letras (mayúscul
 Route::get('saludo/{nombre?}', function($nombre = "Invitado") {     
    return "Hola, " . $nombre; 
 })->where('nombre', "[A-Za-z]+"); 
-``````
+````
 # Rutas con nombre o named routes
 En ocasiones puede ser conveniente asociar un nombre a una ruta. Especialmente, **cuando esa ruta va a formar parte de un enlace en alguna página de nuestro sitio**, ya que en un futuro la ruta podría cambiar, y de este modo evitamos tener que actualizar los enlaces con el nuevo nombre. 
 Para ello, al definir la ruta, le asociamos con la función `name` el nombre que queramos. Por ejemplo:
@@ -139,15 +140,16 @@ Para ello, al definir la ruta, le asociamos con la función `name` el nombre que
 Route::get('contacto', function() {     
    return "Página de contacto"; 
 })->name('ruta_contacto'); 
-``````
+````
 Ahora, si queremos definir un enlace a esta ruta en cualquier parte, basta con emplear la función route de Laravel, indicando el nombre que le hemos asignado a esta ruta. Por lo tanto, en lugar de poner esto:
+
 ````php
 echo '<a href="/contacto">Contacto</a>'; 
-``````
+````
 Podemos hacer algo como esto otro, tal y como veremos más adelante cuando definamos nuestras vistas:
 ````php
 <a href="{{ route('ruta_contacto') }}">Contacto</a> 
-``````
+````
 De este modo, ante futuros cambios en las rutas, sólo deberemos cambiar la URL en el correspondiente `Route::get` de `routes/web.php`. Por Ejemplo:
 
 En el futuro se puede cambiar la forma en la que lo ve el usuario. Por ejemplo, puedes cambiar `Route::get('/contactame'...)` por `Route::get('/acerca-de'...)`, pero no tendrás que modificar ni una línea de código más en tu aplicación, porque internamente esa ruta seguirá llamándose route('ruta_contacto').
@@ -155,7 +157,7 @@ En el futuro se puede cambiar la forma en la que lo ve el usuario. Por ejemplo, 
 # Verbos http: GET, POST, PUT, PATCH y DELETE
 Además de GET, en el enrutador se pueden enrutar otras acciones:
 
-``````
+````php
 Route::get();    // Solicitudes habituales
 Route::post();   // Recepción de datos de formulario (para insert)
 Route::put();    // Recepción de datos para update (también puede escribirse Route::patch(), que no es lo mismo, pero casi)
@@ -163,7 +165,7 @@ Route::delete(); // Recepción de datos para delete
 Route::match(array('GET','POST'), 'ruta', acción)
                  // Responderá tanto a GET como a POST
 
-`````````
+````
 
 ::: warning
 
@@ -174,13 +176,13 @@ Los verbos PUT, PATCH y DELETE no están soportados aún por HTML. Las razones p
 Podemos combinar varias cláusulas `where` en una ruta para validar distintos parámetros que pueda tener, y también enlazar estas llamadas con una a la función `name` para nombrar la ruta. 
 Por ejemplo, la siguiente ruta **espera recibir un nombre con caracteres, y un id numérico**, ambos con valores por defecto:
 
-``````
+````php
 Route::get('saludo/{nombre?}/{id?}', function($nombre="Invitado", $id=0) {     
    return "Hola $nombre, tu código es el $id"; 
    })->where('nombre', "[A-Za-z]+")   
    ->where('id', "[0-9]+")   
    ->name('saludo'); 
-``````
+````
 Si accedemos a cada una de las siguientes URLs, obtendremos cada una de las respuestas indicadas: 
 
 | Ruta           	| Respuesta                        	|
@@ -212,9 +214,9 @@ Para empezar simplemente indicaremos que las rutas devuelvan una cadena (así po
 
 Para comprobar que las rutas se hayan creado correctamente utiliza el comando de artisan que devuelve un listado de rutas y además prueba también las rutas en el navegador.
 
-``````
+````php
  php artisan route:list
-```````
+````
 
 ## Tablas de multiplicar
 
