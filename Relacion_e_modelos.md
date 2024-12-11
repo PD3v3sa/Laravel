@@ -1,0 +1,231 @@
+---
+# Metainformació del document
+title: Laravel 
+titlepage: true
+subtitle: Relación Entre Modelos
+author:
+- Pepe Devesa
+lang: va
+
+# portada
+titlepage-rule-height: 2
+#titlepage-rule-color: EE0000
+titlepage-text-color: 0F0E0E
+titlepage-background: ../img/logo.png
+
+# configuració de l'índex
+toc: true
+toc-own-page: true
+toc-title: Continguts
+toc-depth: 2
+
+# capçalera i peu
+header-left: \thetitle
+header-right: Curs 2023-2024
+footer-left: IES Salvador Gadea
+footer-right: \thepage/\pageref{LastPage}
+
+# Les figures que apareguen on les definim i centrades
+float-placement-figure: H
+caption-justification: centering
+# No volem numerar les linies de codi
+listings-disable-line-numbers: true
+
+# Configuracions dels paquets de latex
+header-includes:
+# imatges i subfigures
+- \usepackage{graphicx}
+- \usepackage{subfigure}
+- \usepackage{lastpage}
+
+# caixes d'avisos
+- \usepackage{awesomebox}
+- \usepackage{lastpage}
+# text en columnes
+- \usepackage{multicol}
+- \setlength{\columnseprule}{1pt}
+- \setlength{\columnsep}{1em}
+
+page-background: ../img/agua.png
+page-background-opacity: 0.5
+
+
+# definició de les caixes d'avis
+pandoc-latex-environment:
+   noteblock: [note]
+   tipblock: [tip]
+   warningblock: [warning]
+   cautionblock: [caution]
+   importantblock: [important]
+
+
+...
+# Relaciones entre modelos
+En esta sesión veremos qué tipos de relaciones se pueden establecer entre los modelos de la aplicación, y cómo se reflejan automáticamente en la base de datos. Para ello, Eloquent permite definir relaciones de varios tipos entre tablas. Éstas se definen a través de los distintos modelos involucrados en la relación, como veremos a continuación.
+
+## Relaciones uno a muchos o one to many
+Para ilustrar esta relación veamos nuestro ejemplo: 
+supongamos que tenemos los modelos `Autor` y `Libro` , de modo que un autor puede tener varios libros, y un libro está asociado a un autor. 
+
+La forma de establecer la relación entre ambos consistirá en añadir en la tabla de libros una clave ajena al autor al que pertenece. A la hora de plasmar esta relación en los modelos, usaríamos el método `hasMany` :
+
+`````php
+class Autor extends Model {     
+
+
+    public function libros(){
+
+        return $this->hasMany(Libro::class);     
+        
+        } 
+
+} 
+``````
+Se asume que la tabla de libros tiene una clave primaria `id` , y que la clave ajena correspondiente hacia la tabla de autores es `autor_id` . De lo contrario, se pueden especificar otros pasando más parámetros a hasMany. 
+
+De este modo obtenemos los libros asociados a un autor:
+
+````php
+$libros = Autor::findOrFail($id)->libros(); 
+`````
+
+Finalmente, también podemos establecer la **relación inversa**, y recuperar el autor al que pertenece un determinado libro, definiendo un método en la clase Libro que emplee `belongsTo` , como en las relaciones uno a uno:
+
+````php
+class Libro extends Model {     
+
+    public function autor(){         
+        return $this->belongsTo(Autor::class);     
+    } 
+
+}
+````
+Y obtener, por ejemplo, el nombre del autor a partir del libro:
+
+````php
+$nombreAutor = Libro::findOrFail($id)->autor->nombre; 
+`````
+* Para probar cómo funcionan las relaciones, vamos primero a crear un nuevo libro asociado al autor 1. Definimos una ruta de prueba en el archivo `routes/web.php` con este código (deberemos incorporar con use los modelos de Autor y Libro ):
+
+````php
+Route::get('relacionPrueba', function() {
+    $autor = Autor::findOrFail(1);
+    $libro = new Libro();
+    $libro->titulo = "Libro de prueba " . rand();
+    $libro->editorial = "Editorial de prueba";
+    $libro->precio = 5;
+    $libro->autor()->associate($autor);
+    $libro->save();
+    return redirect()->route('libros.index');
+});
+````
+* Ahora, modificamos la vista `libros/index.blade.php` para que, en el listado, utilice las relaciones entre tablas para mostrar el nombre del autor entre paréntesis junto al título de cada libro:
+
+````php
+@forelse($libros as $libro)
+<li>
+    <a href="{{ route('libros.show', $libro) }}">
+        {{ $libro->titulo }} ({{ $libro->autor->nombre }})
+    </a>
+</li>
+@empty
+    <li>No se encontraron libros</li>
+@endforelse
+`````
+\begin{figure}
+\centering
+\subfigure[Relacion uno a muchos]{\includegraphics[width=0.5\linewidth]{../img/1an.png}}
+\end{figure}
+
+### Acceso eficiente a datos relacionados. _Eager loading_
+En el ejemplo anterior, hemos visto cómo, dado un libro, podemos obtener el nombre del autor de este modo en una vista Blade:
+````php
+{{ $libro->autor->nombre }}
+`````
+Sin embargo, este código provoca una nueva consulta en la base de datos para buscar los datos del autor asociado al libro, con lo que, para un listado de 100 libros, estaremos haciendo 100 consultas adicionales para
+extraer la información de los respectivos autores.
+
+Para evitar esta sobrecarga, podemos emplear una técnica llamada eager loading (que en español podríamos traducir como carga apresurada o impaciente). Consiste en emplear el método `with` para indicar qué
+relación queremos dejar pre-cargada en el resultado. 
+Por ejemplo, si indicamos algo así en la funció `index` del controlador de libros:
+
+````php
+public function index()
+{
+    $libros = Libro::with('autor')->get();
+    return view('libros.index', compact('libros'));
+}
+`````
+# Relaciones muchos a muchos o many to many
+Estas relaciones son más difíciles de plasmar, ya que es necesario contar con una tercera tabla que relacione las dos tablas afectadas. Pero vayamos por partes...
+Para ilustrar este caso, supongamos los modelos `profesor` e `imparte` , de modo que un profesror puede tener
+impartir varias asignaturas, y una asignatura puede ser impartida porvarios profesores. Definimos un método en el modelo
+`profesor` que utilice el método `belongsToMany` para indicar con qué otro modelo se relaciona:
+
+```php
+ public function asignaturas(){
+        return $this->belongsToMany(Asignaturas::class, 'imparte','dni','asignatura');
+    }
+````
+Así ya podremos acceder a los asignaturas de un profesor:
+```php
+ $profesor = Profesores::find($id);
+ $asignaturas = $profesor->asignaturas;
+ o
+ $asignaturas= Profesores::findOrFail($id)->asignaturas;
+```
+En este caso, al otro lado de la relación hacemos lo mismo: 
+definimos un método en el modelo asignatura que
+indique con `belongsToMany que puede pertenecer a varios profesores:
+``````php
+public function profesores(){
+    return $this->belongsToMany(Profesores::class, 'imparte','dni','asignatura');
+}
+``````
+
+A efectos de automatización, es decir, para que Eloquent establezca los nexos de forma automática, si
+queremos establecer una relación muchos a muchos entre un modelo  `A` y otro `B` , se asume que existirá
+otra tabla `a_b` (el orden en que se colocan los nombres de las tablas es alfabético), con los campos `a_id`
+y `b_id` , que relacionen los dos modelos. 
+En nuetro caso, se asumirá que existe una tabla `imparte` con un campo `asignatura`  y otro llamado ` dni` , que enlacen con los correspondientes id de las
+tablas de profesor y asignatura. Sdebemos pasar más parámetros a `belongsToMany`  para
+indicarlo.
+
+En el caso de las relaciones muchos a muchos, es posible que nos interese acceder a algún dato de esa tabla
+intermedia que los relaciona. En ese caso, hacemos uso del atributo `pivot` , predefinido, y que apunta a la
+tabla o modelo intermedio entre los dos relacionados. Por ejemplo, si quisiéramos obtener la fecha de
+creación de la relación entre un usuario y un rol, podríamos hacer esto:
+
+``````php
+$profesores = asignatura::findOrFail($id)->asignaturas;
+for($profesores as $profesor)
+{
+    echo $profesor->pivot->created_at;
+}
+``````
+
+# SQL
+
+Debemos agregar al controlador, la importación de la clase `DB`.
+
+````php
+use Illuminate\Support\Facades\DB;
+`````
+Creamos la consulta en un `string`, se la incluimos a la función `select( )` y por ultimo retornamos el resultado.
+
+````php
+use Illuminate\Support\Facades\DB;
+
+class ProductController extends Controller
+{
+    public function index()
+    {
+        $sql = 'SELECT * FROM products';
+        $products = DB::select($sql);
+        return $products;
+    }
+}
+````
+
+Para consultas de base de datos con la libreria `facade`[Database: Query Builder
+](https://laravel.com/docs/10.x/queries)
