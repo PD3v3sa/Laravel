@@ -21,7 +21,7 @@ toc-depth: 2
 
 # capçalera i peu
 header-left: \thetitle
-header-right: Curs 2023-2024
+header-right: Curs 2024-2025
 footer-left: IES Salvador Gadea
 footer-right: \thepage/\pageref{LastPage}
 
@@ -91,7 +91,7 @@ extensión `.blade.php` (que hace referencia al motor de plantillas Blade que ve
 Podemos, por ejemplo, crear una vista sencilla dentro de esta carpeta de vistas (llamémosla
 inicio.blade.php ), con un contenido HTML básico:
 
-``````html
+````html
 <html>
    <head>
       <title>Inicio</title>
@@ -100,8 +100,9 @@ inicio.blade.php ), con un contenido HTML básico:
       <h1>Página de inicio</h1>
    </body>
 </html>
-``````
+````
 Y podemos utilizar esta vista como página de inicio:
+
 ````php
 Route::get('/', function () {
     return view('inicio');
@@ -112,11 +113,9 @@ Es muy habitual pasar cierta información a ciertas vistas, como por ejemplo:
 * listados de datos a mostrar.
 * datos de un elemento en concreto. 
 
-Por ejemplo, si queremos dar un mensaje de bienvenida a un nombre
-(supuestamente variable), debemos almacenar el nombre en una variable en la ruta, y pasárselo a la vista al
-cargarla. Esto puede hacerse, por ejemplo, con el método `with`` tras generar la vista, indicando el nombre
-con que lo vamos a asociar a la vista, y el valor (variable) asociado a dicho nombre. En nuestro caso quedaría
-así:
+Por ejemplo, si queremos dar un mensaje de bienvenida a un nombre (supuestamente variable), debemos almacenar el nombre en una variable en la ruta, y pasárselo a la vista al cargarla. Esto puede hacerse, por ejemplo, con el método `with` tras generar la vista, indicando el nombre
+con que lo vamos a asociar a la vista, y el valor (variable) asociado a dicho nombre. 
+En nuestro caso quedaría así:
 
 
 ````php
@@ -124,12 +123,12 @@ Route::get('/', function() {
  $nombre = "Pepe";
  return view('inicio')->with('nombre', $nombre);
 });
-``````
+````
 Posteriormente, en la vista, deberemos mostrar el valor de esta variable en algún lugar del código HTML.
 
 Podemos emplear PHP tradicional para recoger esta variable:
 
-``````html
+````html
 <html>
    <head>
       <title>Inicio</title>
@@ -139,27 +138,27 @@ Podemos emplear PHP tradicional para recoger esta variable:
       <p>Bienvenido/a <?php echo $nombre; ?></p>
    </body>
 </html>
-``````
+````
 Pero es más habitual y limpio emplear una sintaxis específica de Blade, como veremos a continuación.
 Como alternativas al uso de `with` comentado antes, también podemos utilizar un `array asociativo`
 (asignando así varios nombres a varios valores):
 
 ````php
 return view('inicio')->with(['nombre' => $nombre, ...]);
-``````
-Asimismo, podemos utilizar este mismo array como segundo parámetro de la función `view` , y prescindir así
-de `with`:
+````
+
+Asimismo, podemos utilizar este mismo array como segundo parámetro de la función `view` , y prescindir así de `with`:
+
 ````php
 return view('inicio'),['nombre' => $nombre, ...]);
-``````
-Y también podemos utilizar una función llamada `compact` como segundo parámetro de view . A esta
+````
+Y también podemos utilizar una función llamada `compact` como segundo parámetro de view. A esta
 función le pasamos únicamente el nombre de la variable que usaremos en la vista y, __siempre que la variable
 asociada se llame igual__, establece la asociación por nosotros:
 ````php
 return view('inicio', compact('nombre'));
 ``````
-La función `compact` admite tantos parámetros como datos queramos enviar a la vista por separado, cada
-uno con su nombre asociado.
+La función `compact` admite tantos parámetros como datos queramos enviar a la vista por separado, cada uno con su nombre asociado.
 Si simplemente vamos a devolver una vista con poca información asociada, o poca lógica interna, también
 podemos abreviar el código anterior llamando directamente a `view` , en lugar de a `get` primero, en el
 archivo `routes/web.php` , y le pasamos así la información asociada a la vista:
@@ -167,7 +166,7 @@ archivo `routes/web.php` , y le pasamos así la información asociada a la vista
 
 ````php
 Route::view('/', 'inicio', ['nombre' => 'Pepe']);
-``````
+````
 
 # Primeros pasos con el motor de plantillas Blade
 
@@ -177,16 +176,18 @@ Blade en nuestras vistas.
 Por ejemplo, si queremos mostrar el contenido de la variable `nombre` que hemos pasado antes a la página de inicio, en lugar de hacer un rudimentario 
 `echo` en PHP, podemos emplear una sintaxis de `dobles llaves {{ }}`, facilitada por Blade, para mostrar el contenido de esa variable o el contenido de 
 una función. Con esto la línea que mostraba el nombre pasa de ser así...
+
 ````php
 Bienvenido/a <?php echo $nombre ?>
 ````
 ...a ser así:
+
 ````php
 Bienvenido/a  {{ $nombre }} 
 La hora actual es {{ time() }}
 ````
-Blade se encarga de escapar el resultado llamando a `htmlentities` para prevenir errores y ataques de tipo XSS. Si en algún caso no queremos escapar los 
-datos tendremos que llamar a:
+Blade se encarga de escapar el resultado llamando a `htmlentities` para prevenir errores y ataques de tipo XSS(Cross Site Scripting), es decir, que se inyectan scripts de Javascript con la variable a mostrar. 
+Si en algún caso no queremos escapar los  datos tendremos que llamar a:
 ````php
 Bienvenido/a  {!! $nombre !!} 
 ````
@@ -200,20 +201,20 @@ método solo tenemos que utilizarlo si estamos seguros de que no queremos que se
 ## Mostrar un dato solo si existe
 
 Para comprobar que una variable existe o tiene un determinado valor podemos utilizar el operador ternario de la forma:
-``````php
+````php
 {{ isset($name) ? $name : 'Valor por defecto' }}
-```````
+````
 O simplemente usar la notación que incluye Blade para este fin:
-``````php
+````php
 {{ $name or 'Valor por defecto' }}
-``````
+````
 ## Comentarios
 Para escribir comentarios en Blade se utilizan los símbolos __{{-- y --}}__, por ejemplo:
 
-``````php
+````php
 {{-- Este comentario no se mostrará en HTML --}}
-``````
-## Estructuras de control de flujo en Blade
+````
+# Estructuras de control de flujo en Blade
 Para iterar sobre un conjunto de datos (array), podemos emplear la directiva `@foreach` , con una sintaxis similar al foreach de PHP, pero sin necesidad
 de llaves. Basta con finalizar el bucle con la directiva `@endforeach` , de este modo:
 
@@ -223,7 +224,7 @@ de llaves. Basta con finalizar el bucle con la directiva `@endforeach` , de este
       <li>{{ $elemento }}</li>     
    @endforeach 
 </ul> 
-```````
+````
 En el caso de querer realizar alguna comprobación (por ejemplo, si el array anterior está vacío, para mostrar un mensaje pertinente), usamos la directiva 
 `@if` , cerrada por su correspondiente pareja `@endif` . Opcionalmente, se puede intercalar una directiva `@else` para el camino alternativo, o también
 `@elseif` para indicar otra condición. El ejemplo anterior podría quedar así:
@@ -238,7 +239,7 @@ En el caso de querer realizar alguna comprobación (por ejemplo, si el array ant
       <li>No hay elementos que mostrar</li>     
    @endif 
 </ul> 
-```````
+````
 También podemos comprobar si una variable está definida. En este caso, 
 reemplazamos la directiva `@if por @isset` , con su correspondiente 
 cierre `@endisset`.
@@ -252,7 +253,7 @@ cierre `@endisset`.
       <li>No hay elementos que mostrar</li>     
    @endisset 
 </ul> 
-```````
+````
 Sin embargo, con cualquiera de estas opciones tenemos un problema: 
 
 * en el primer caso, si la variable `$elementos` no está definida, mostrará un error de PHP. 
@@ -265,6 +266,7 @@ es emplear la directiva `@forelse` en lugar de `@foreach` . Esta
 directiva permite una cláusula adicional `@empty` para indicar qué 
 hacer si la colección no tiene elementos o está sin definir. El 
 ejemplo anterior quedaría ahora así de abreviado:
+
 ````php
 <ul>     
   
@@ -274,7 +276,7 @@ ejemplo anterior quedaría ahora así de abreviado:
         <li>No hay elementos que mostrar</li>     
       @endforelse 
 </ul> 
-```````
+````
 En este tipo de iteradores `( @foreach o @forelse )`, tenemos 
 disponible un objeto llamado `$loop` , con una serie de propiedades 
 sobre el bucle que estamos iterando, como por ejemplo:
@@ -292,7 +294,7 @@ Podemos ver todas las propiedades disponibles en este objeto llamando a `var_dum
         <li>No hay elementos que mostrar</li>     
       @endforelse 
 </ul> 
-```````
+````
 Si, por ejemplo, queremos determinar si es el último elemento de la 
 lista, y mostrar un mensaje o estilo especial, podemos hacer algo como 
 esto:
@@ -307,11 +309,12 @@ esto:
         <li>No hay elementos que mostrar</li>     
       @endforelse 
 </ul> 
-```````
+````
 Existen otros tipos de estructuras iterativas y selectivas en Blade, como `@while , @for o @switch` , entre otras. Podéis consultar sobre su uso en la documentación [oficial de Blade](https://laravel.com/docs/10.x/blade#control-structures). 
+
 Vamos a aplicar esto en nuestro ejemplo del proyecto biblioteca. Definiremos una ruta para sacar un listado de libros y, de momento, vamos a crear a _mano_ dicho listado en el propio método de enrutamiento, y se lo pasaremos a una vista llamada `listado.blade.php`. Por un lado, la nueva ruta para el listado puede quedar así:
 
-```php
+````php
 Route::get('listado', function() {     
    $libros = array(         
       array("titulo" => "El juego de Ender",
@@ -326,7 +329,7 @@ Route::get('listado', function() {
       
       return view('listado', compact('libros')); 
       })->name('listado_libros');
-`````` 
+````
 Por su parte, la vista listado.blade.php puede quedar así:
 
 ````html
@@ -345,8 +348,9 @@ Por su parte, la vista listado.blade.php puede quedar así:
         </ul>     
     </body> 
 </html>
-``````
+````
 y el resultado:
+
 \begin{figure}
 \centering
 \subfigure[Listado de libros]{\includegraphics[width=0.5\linewidth]{../img/listado.png}}
@@ -365,7 +369,7 @@ dado a la ruta:
 
 ````php
 <a href="{{ route('ruta_contacto') }}">Contacto</a> 
-``````
+````
 
 Por ejemplo, podemos poner un enlace a la vista del listado de libros que hemos creado antes (y que hemos nombrado como listado_libros de este modo en nuestra vista de `inicio.blade.php` : 
 ````php
@@ -439,7 +443,7 @@ Del mismo modo, nuestra vista para el listado de libros quedaría de esta forma:
          <li>No se encontraron libros</li>    
       @endforelse     </ul> 
 @endsection 
-`````
+````
 ## Incluir vistas dentro de otras
 También suele ser habitual definir contenidos parciales (se suelen 
 definir en una subcarpeta partials dentro de `resources/views` ), e 
