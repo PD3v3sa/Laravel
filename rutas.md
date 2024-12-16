@@ -219,9 +219,4 @@ Para comprobar que las rutas se hayan creado correctamente utiliza el comando de
 ````
 
 ## Tablas de multiplicar
-
-| Ruta           	| Texto a mostrar                        	|
-|----------------	|----------------------------------	|
-| /tabla          | tabla del 6 |
-| /table/x        | tabla del x en caso de  no pasar un número por defecto el 2 controlar que se pasen solo números.|
-
+Hacer una ruta **/tabla/{numero}** que me devuelva la tabla de multipplicar del número que se le pasa, tiene que ser un número, en caso de estar vacio el número sacará la tabla del 3.  
