@@ -407,11 +407,15 @@ Para crear una plantilla en Blade, creamos un archivo normal y corriente (por ej
 ````
 Después, en cada vista en que queramos utilizar esta plantilla, 
 añadimos la directiva **`@extends`** de Blade, indicando el nombre de 
-plantilla que vamos a utilizar. Con la directiva `@section` , seguida 
-del nombre de la sección, definimos el contenido para cada uno de los 
-`@yield` que se hayan indicado en la plantilla. Finalizaremos cada 
-sección con la directiva `@endsection` . Así, para nuestra página 
-inicial ( `inicio.blade.php` ), el contenido puede ser ahora éste:
+plantilla que vamos a utilizar. 
+
+* Con la directiva `@section` , seguida  del nombre de la sección, definimos el contenido para cada uno de los 
+`@yield` que se hayan indicado en la plantilla. 
+
+* Finalizaremos cada  sección con la directiva `@endsection`.
+
+Así, para nuestra página  inicial ( `inicio.blade.php` ), el contenido puede ser ahora éste:
+
 ````php
 @extends('plantilla')  
 
@@ -493,8 +497,10 @@ Route::get('listado', function() {
    ...     
    return view('libros.listado', compact('libros'));    
 })->name('listado_libros'); 
-``````
- ## Vistas para páginas de error
+````
+
+## Vistas para páginas de error
+
  A lo largo de estas sesiones, algunas acciones que hagamos provocarán páginas de error con determinados códigos, como por ejemplo _404_ para páginas no encontradas. Si queremos definir el aspecto y estructura de estas páginas, basta con crear la vista correspondiente en la carpeta `resources/views/errors` , por ejemplo, `resources/views/errors/404.blade.php` para el error 404 (anteponemos el código de error al sufijo de la vista).
 
  ```php
