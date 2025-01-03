@@ -87,7 +87,7 @@ Ahora, y suponiendo, que ya tenemos la estructura de tablas creada en la base de
 Veremos cómo definir el modelo de datos asociado a cada tabla, y cómo manipular estos datos empleando el `ORM Eloquent`, incorporado con Laravel.
 
 # Crear el modelo
-La idea es crear una clase por cada tabla que tengamos en nuestra base de datos, para así interactuar con la tabla a través de dicha clase asociada. Para crear esta clase modelo, utilizamos la opción `make:model` del comando php artisan. Le pasaremos como parámetro adicional el nombre de la clase a crear. 
+La idea es crear una clase por cada tabla que tengamos en nuestra base de datos, para así interactuar con la tabla a través de dicha clase asociada. Para crear esta clase modelo, utilizamos la opción `make:model` del comando `php artisan`. Le pasaremos como parámetro adicional el nombre de la clase a crear. 
 Por ejemplo, para el caso de nuestra biblioteca, podemos crear así el modelo Libro:
 
 ````php
