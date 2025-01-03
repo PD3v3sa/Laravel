@@ -60,6 +60,28 @@ pandoc-latex-environment:
 
 
 ...
+Una vez vistas dos de las tres patas en que se sustenta el patrón **MVC** (las vistas y los controladores), en esta sección abordaremos la tercera de ellas: **el modelo de datos**. Con esto, trataremos algunas cuestiones importantes sobre cómo gestiona Laravel el acceso a bases de datos, y qué mecanismos ofrece para sincronizar los datos de nuestra aplicación con los documentos o registros de una base de datos, así como para generar automáticamente la estructura de tablas y campos de la base de datos a partir del modelo de la aplicación.
+
+# Parámetros de conexión a la base de datos
+Una de las primeras cosas que debemos hacer para configurar el acceso a la base de datos en nuestro proyecto es establecer los parámetros con los que conectar a dicha base de datos: _nombre del servidor, usuario, contraseña, etc_. Estos parámetros se definen en el archivo **.env** para cada entorno de despliegue de la aplicación (recuerda que este archivo no se sube a Git, por lo que cada entorno tendrá el suyo). Dentro de este archivo, debemos modificar las siguientes variables de entorno:
+
+* `DB_CONNECTION`: tipo de SGBD a usar
+* `DB_HOST`: dirección o IP del SGBD (127.0.0.1 para conexión local)
+* `DB_PORT`: puerto por el que el SGBD estará escuchando. Por ejemplo, el puerto por defecto para MySQL es 3306
+* `DB_DATABASE`: nombre de la base de datos a la que conectar
+* `DB_USERNAME`: login del usuario para conectar
+* `DB_PASSWORD`: password del usuario para conectar
+
+En cuanto al primer parámetro (DB_CONNECTION), aquí tenemos un listado de los sistemas más habituales, junto con sus puertos por defecto que podemos utilizar en DB_PORT:
+
+| Id SGBD   | Nombre SGBD      | Puerto por defecto |
+|-----------|------------------|--------------------|
+| mysql     | MySQL/MariaDB    | 3306              |
+| oracle    | Oracle           | 1521              |
+| pgsql     | PostgreSQL       | 5432              |
+| sqlsrv    | SQL Server       | 1433              |
+| sqlite    | SQLite           | -                 |
+
 
 Ahora, y suponiendo, que ya tenemos la estructura de tablas creada en la base de datos, vamos a ver qué mecanismos ofrece Laravel para acceder a estos datos de forma sencilla desde la aplicación. 
 Veremos cómo definir el modelo de datos asociado a cada tabla, y cómo manipular estos datos empleando el `ORM Eloquent`, incorporado con Laravel.

@@ -106,21 +106,21 @@ Conviene tener presente, por ejemplo, que el tipo `string` que hemos utilizado e
 Podemos especificar una clave primaria con el método `primary`, al que le podemos pasar o bien el nombre del campo clave, o un array de campos clave, en el caso de que ésta sea compuesta. Por defecto, los campos de tipo id se auto-establecen como claves primarias.
 ````php
 $table->primary(['campo1', 'campo2']);
-``````
+````
 # Creación de migraciones
 Creamos migraciones con el comando:
 ````php
 php artisan make:migration nombre_migracion
-`````
+````
 Por ejemplo:
-`````php
+````php
 php artisan make:migration crear_tabla_prueba
-```````
+````
 Notar que Laravel ya asigna automáticamente la fecha de la migración, sólo debemos especificar el nombre descriptivo de la misma. Además, si Laravel detecta la palabra _create_ en el nombre de la migración, finalizada en table, intuye que es para crear una tabla nueva. En cambio, si detecta la palabra to (entre otras), y al final la palabra table, intuye que se va a alterar o modificar una tabla existente. Esto es gracias a la clase TableGuesser incorporada en Laravel, que detecta ciertos patrones en los nombres de migraciones. La diferencia entre la creación y la modificación es que en el método up de la migración se utilizará Schema::create o Schema::table sobre la tabla en cuestión, respectivamente:
 ````php
 php artisan make:migration crear_tabla_pedidos --create=pedidos
 php artisan make:migration nuevo_campo_usuario --table=usuarios
-`````
+````
 En el caso de la segunda migración, si, por ejemplo, queremos añadir una columna con el número de teléfono de los usuarios, puede quedar así (tanto el método up como el down):
 ````php
 public function up()
@@ -136,7 +136,7 @@ public function down()
         $tabla->dropColumn('telefono');
     });
 }
-`````
+````
 Si queremos que el campo en cuestión esté en un orden concreto, podemos usar el método after para indicar detrás de qué campo queremos ponerlo (en el método up):
 
 ````php
@@ -152,23 +152,23 @@ Adicionalmente a las tablas afectadas, se tendrá otra tabla migrations en la ba
 
 Para deshacer las migraciones realizadas (ejecutar el método down de las mismas), ejecutamos:
 
-````php``
+````php
 php artisan migrate:rollback
-``````
+````
 Esto eliminará TODAS las migraciones del último lote existente en la tabla migrations. Si no queremos deshacerlo todo, sino retroceder un número determinado de migraciones dentro de ese lote, ejecutamos el comando anterior con un parámetro --step, indicando el número de pasos o migraciones a deshacer (en orden cronológico de más reciente a más antigua):
 
-````php``
+````php
 php artisan migrate:rollback --step=2
-``````
+````
 Si volvemos a hacer la migración, se restablecerán las migraciones deshechas de ese lote.
 
 Otro comando también muy utilizado es `migrate:fresh`. Lo que hace es eliminar todas las migraciones realizadas y volverlas a lanzar. Es útil cuando, estando en desarrollo, añadimos campos nuevos a alguna tabla y queremos rehacer las tablas completamente.
-````php``
+````php
 php artisan migrate:fresh
-``````
+````
 
 :::note
-NOTA: el comando migrate:fresh es DESTRUCTIVO, elimina los contenidos de las tablas, y sólo debe utilizarse en entornos de desarrollo, no de producción.
+NOTA: el comando migrate:fresh es **DESTRUCTIVO**, elimina los contenidos de las tablas, y sólo debe utilizarse en entornos de desarrollo, no de producción.
 :::
 
 ## Aplicando las migraciones a nuestro ejemplo
@@ -182,7 +182,7 @@ Ahora vamos a crear una nueva migración para definir la estructura de los **lib
 
 ````php
 php artisan make:migration crear_tabla_libros --create=libros
-`````
+````
 Editamos después el contenido de esta migración, en concreto el método up para definir estos campos en los libros:
 
 ````php
@@ -196,11 +196,11 @@ public function up()
         $table->timestamps();
     });
 }
-`````
+````
 Cargamos las migraciones con el comando:
 
 ````php
 php artisan migrate
-`````
+````
 Tras esto, ya deberíamos ver en nuestra base de datos “biblioteca” la tabla creada (libros), junto con la tabla migrations que crea Laravel para gestionar las migraciones realizadas.
 
