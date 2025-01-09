@@ -114,7 +114,7 @@ Por convención, los modelos se crean con un nombre en singular, empezando por m
     
 ```````
 
-En nuestro caso, vamos también a utilizar el modelo de `usuario` que ya existe en la carpeta `app\Models`, aunque lo renombraremos de `User`` a `Usuario`:
+En nuestro caso, vamos también a utilizar el modelo de `usuario` que ya existe en la carpeta `app\Models`, aunque lo renombraremos de `User` a `Usuario`:
 
 ````php
 
@@ -127,8 +127,7 @@ use Illuminate\Database\Eloquent\Model;
 class Usuario extends Model
 {
     ...
-```````
-
+````
 Automáticamente, se asocia este modelo a una tabla con el mismo nombre, pero en plural y en minúscula, por lo que los modelos anteriores estarían asociados a unas tablas **libros y usuarios en la base de datos**, respectivamente. 
 En caso de que no queramos que sea así, definimos una propiedad `$table` en la clase con el nombre que queramos que tenga la tabla asociada. 
 Por ejemplo:
@@ -139,7 +138,7 @@ class Libro extends Model
 {
     protected $table = 'mislibros';
 }
-``````
+````
 ## Seguir una nomenclatura uniforme
 Recuerda que, de sesiones anteriores, hemos comentado la recomendación/necesidad de seguir una nomenclatura uniforme en los modelos, controladores y vistas. 
 Así, para el 
@@ -157,9 +156,9 @@ Un `ORM (Object Relational Mapping)` **es una herramienta que permite establecer
 ## Realizar búsquedas
 
 Una vez creado el modelo, y aunque esté vacío, ya podemos utilizarlo en los controladores para acceder a los datos. Basta con importar la clase correspondiente `(con use)`, y utilizar los métodos que se heredan de `Model`. 
-Por ejemplo, el método `get` permite obtener los registros de la tabla, convertidos a objetos. Así es como obtendríamos todos los libros de la tabla desde un controlador:
+Por ejemplo, el método `get` o `all` permite obtener los registros de la tabla, convertidos a objetos. Así es como obtendríamos todos los libros de la tabla desde un controlador:
 
-```````php
+````php
 
 use App\Models\Libro;
 
@@ -173,22 +172,67 @@ class LibroController extends Controller
     }
 }
 
-```````
+````
+## Consultas con Eloquent
+````php
+$libros = Libro::all();        // Devuelve todos los artículos
+$libros = Libro::find($id);       // Devuelve el artículo con ese $id
+$libros = Libro::findOrFail($id); // Error 404 si el artículo no existe
+$libros = Libro::where('id', '>', 100)->get();  // Select con where
+$libros = Libro::where('id', '>', 100)->take(10)->get();  // Select con where y take
+$libros = Libro::max('id');           // Devuelve el último id asignado
+````
+
+También podriamos utilizar el sql convencional. Hay que añadir `use Illuminate\Support\Facades\DB;`
+
+````php
+use Illuminate\Http\Request;
+use App\Models\Libro;
+
+use Illuminate\Support\Facades\DB;
+
+
+class LibroController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        //
+        $libros = DB::select('select * from libros');
+        //$libros = Libro::all();
+        return view('libros.index', compact('libros'));
+           
+    }
+````
+## Usando la BD con QueryBuilder
+El grado de abstracción de QueryBuilder es mucho menor que el de Eloquent. Es decir, estaremos CASI escribiendo SQL, sin llegar a hacerlo.
+
+Algunos ejemplos de uso te darán una pista de qué tipo cosas se pueden hacer con QueryBuilder:
+````php
+$users = DB::table("users")->get();	
+$users = DB::table("users")->where("name", "=", "Ana")->first();
+$users = DB::table("users")->where("edad", ">=", 18)->orderBy("apellidos");
+$maxId = DB::table("users")->max("id");
+$existe = DB::table("users")->where("id", "=", $id)->exists();
+$users = DB::table("users")->select("nombre, apellidos as apell")->get(); 
+````
 Lo que obtenemos es un array de objetos, por lo que deberemos acceder a sus propiedades como tales.
 
 Por ejemplo, si queremos mostrar los títulos de los libros en una vista Blade, haríamos algo como esto:
 
-`````php
+````php
 @forelse($libros as $libro)
     {{ $libro->titulo }}
 @endforelse
-``````
+````
 Alternativamente, también podemos obtener una consulta filtrada, especificando con el método `where` la condición que deben cumplir los registros a obtener. 
 
 Por ejemplo, así obtendríamos los libros cuyo precio sea inferior a `10` euros:
-`````php
+````php
 $libros = Libro::where('precio', '<', 10)->get();
-`````
+````
 De este otro modo obtendríamos libros con precio inferior a 10 euros y superior a 5 euros, de modo que podemos combinar condiciones:
 
 ````php
@@ -199,13 +243,25 @@ Sobre estas consultas base podemos aplicar una serie de añadidos. Por ejemplo, 
 
 ````php
 $libros = Libro::orderBy('titulo')->get();
-``````
+````
 El método orderBy admite un segundo parámetro que indica el sentido de la ordenación. Por defecto es ASC (ascendente), pero también puede ser DESC:
 
 ````php
 $libros = Libro::orderBy('titulo', 'DESC')->get();
 
 ````
+:::important
+**Ventajas de QueryBuilder sobre SQL**
+
+Como ves, QueryBuilder te permite construir sentencias SQL sin necesidad de escribir SQL.
+
+La ventaja de esto es triple:
+
+1. *No tendremos que depurar nuestros errores sintácticos en SQL*, con el ahorro de tiempo que eso conlleva.
+2. El SQL generado será 100% compatible con el gestor de base de datos que estemos utilizando. Si escribimos SQL en crudo, tendremos que adaptarlo al dialecto de nuestro gestor de base de datos. Y, si cambiamos de gestor, habrá que revisar todas las sentencias SQL para adaptarlas de nuevo. Todo esto lo evita QueryBuilder, puesto que hace esa *adaptación por nosotros*.
+3. Es imposible que suframos un ataque por *inyección de código*, puesto que QueryBuilder no lo permitirá.
+:::
+
 ### Paginaciones de resultados
 
 Si queremos paginar los resultados obtenidos debemos, por un lado, cuando obtengamos el listado desde el controlador, indicar con paginate cuántos registros queremos por página:
@@ -237,7 +293,7 @@ public function index()
         ->paginate(5);
     return view('libros.index', compact('libros'));
 }
-`````
+````
 ### Paginaciones desde Laravel 8
 
 En la versión 8 de Laravel se ha cambiado el estilo de los botones de paginación, empleando el del framework Tailwind CSS. Si queremos seguir utilizando los de Bootstrap, debemos añadir una de estas líneas en el método `boot` del provider `App\Providers\AppServiceProvider`, dependiendo de la versión de Bootstrap que queramos usar (por defecto se usará la 5 en la versión actual de los apuntes):
@@ -248,11 +304,11 @@ Paginator::useBootstrap();
 // Bootstrap 5
 Paginator::useBootstrapFive();
 
-````````
+````
 Además, debemos incorporar la cláusula `use` para localizar el elemento `Paginator`:
 ````php
 use Illuminate\Pagination\Paginator;
-`````
+````
 
 ## Fichas de objetos individuales.
 Una operación bastante habitual es mostrar una ficha de un objeto a partir de un listado, haciendo clic en el título o alguna parte visible de ese objeto. 

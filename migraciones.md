@@ -202,5 +202,32 @@ Cargamos las migraciones con el comando:
 ````php
 php artisan migrate
 ````
-Tras esto, ya deberíamos ver en nuestra base de datos “biblioteca” la tabla creada (libros), junto con la tabla migrations que crea Laravel para gestionar las migraciones realizadas.
 
+# Ejercicio
+
+
+Vamos a configurar correctamente la base de datos. Para esto tenemos que actualizar el fichero `.env` para indicar que vamos a usar una base de datos tipo MySQL llamada "videoclub".
+
+A continuación abrimos PHPMyAdmin y creamos la nueva base de datos llamada videoclub. 
+
+* Para comprobar que todo se ha configurado correctamente vamos a un terminal en la carpeta de nuestro proyecto y ejecutamos el comando que crea la tabla de migraciones. Si todo ha ido bien, al actualizar PHPMyAdmin comprobaremos que se ha creado esta tabla dentro de nuestra base de datos.
+Si nos diese algún error tendremos que revisar los valores indicados en el fichero .env. En caso de ser correctos es posible que también tengamos que reiniciar el servidor o terminal que tengamos abierto.
+* Ahora vamos a crear la tabla que utilizaremos para almacenar el catálogo de películas:
+    * Ejecuta el comando de `php artisan` para crear la migración llamada *create_movies_table* para la tabla *movies*. Una vez creado edita este fichero para añadir todos los campos necesarios, estos son:
+
+````markdown
+| Campo     | Tipo                    | Valor por defecto          |
+|-----------|-------------------------|----------------------------|
+| id        | Autoincremental         |                            |
+| title     | String                  |                            |
+| year      | String de longitud 8    |                            |
+| director  | String de longitud 64   |                            |
+| poster    | String                  |                            |
+| timestamps| Timestamps de Eloquent  |                            |
+````
+
+Por último ejecutaremos el comando de Artisan que añade las nuevas migraciones y comprobaremos en PHPMyAdmin que la tabla se ha creado correctamente con los campos que le hemos indicado.
+
+* Ahora añade los siguientes campos después de *director*
+    * rented     Booleano         
+    * synopsis   Text    
