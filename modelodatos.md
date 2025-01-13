@@ -356,7 +356,7 @@ NOTA: si devolvemos (return) directamente lo que obtiene el método find, nos ll
 En el caso de que el objeto no se encuentre (porque, por ejemplo, utilicemos un id equivocado), la vista generada fallará. Para evitarlo, en lugar del método `find` podemos emplear `findOrFail`, que, en caso de que no se encuentre el objeto, generará una vista con un error 404, más apropiada. **Además, recuerda que puedes personalizar estas páginas de error definiendo las vistas correspondientes.**
 ````php
 $libro = Libro::findOrFail($id);
-`````
+````
 ## Inserciones
 Las inserciones a través de Eloquent se pueden realizar creando una instancia del objeto, rellenando sus atributos y llamando al método `save`, heredado de la superclase Model.
 
@@ -381,7 +381,7 @@ class Libro extends Model
 {
     protected $fillable = ['titulo', 'editorial', 'precio'];
 }
-`````
+````
 Este código de inserción (o bien campo a campo, o usando el método `all`) se suele poner en el método `store` del controlador, para que reciba los datos del formulario de inserción y la haga en la base de datos.
 
 ## Modificaciones
@@ -396,12 +396,24 @@ Por ejemplo:
 $libroAModificar = Libro::findOrFail($id);
 $libroAModificar->titulo="Otro título";
 $libroAModificar->save();
-`````
+````
 También podemos utilizar el método `update` enlazado con `findOrFail`, y pasarle como parámetro todos los datos de la petición, igual que se ha explicado para la inserción, y siempre y cuando hayamos declarado el atributo `$fillable` en el modelo para indicar qué campos se aceptan:
 ````php
 Libro::findOrFail($id)->update($request->all());
-`````
+````
 Este código de modificación se suele poner en el método `update` del controlador, para que reciba los datos del formulario de edición y haga la modificación correspondiente.
+
+![php artisan route:list](protocolo.png)
+
+ Como vemos en la imagen la llamada a  *libros.update* y *libros.show* es igual, salvo por el protocolo, por lo tanto debereemos hacer un ajuste como el siguiente:
+ 
+ ````php
+ <form  action="{{ route('libros.update',$libro,$libro->id ) }}" method="POST">
+    @csrf
+    @method('PUT')
+    ...
+````
+
 
 ## Borrados
 
@@ -417,7 +429,7 @@ public function destroy($id)
     $libros = Libro::get();
     return view('libros.index', compact('libros'));
 }
-``````
+````
 ### Sobre el borrado desde las vistas
 
 Lo normal es que el borrado se active haciendo clic en algún elemento de una vista. Por ejemplo, haciendo clic en un botón o enlace que ponga "Borrar". Sin embargo, si implementamos esto así:
