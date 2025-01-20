@@ -249,8 +249,10 @@ Por ejemplo, de este modo podemos modificar el menú de navegación (`resources/
         <a href="{{ route('libros.create') }}" class="btn btn-success btn-sm my-2"><i class="bi bi-plus-circle"></i> Añadir Libro</a>
     @endif
 ````
-Podemos emplear los métodos 
+Podemos emplear los métodos:
+
 * auth()->check() para comprobar si **SÍ** está autenticado (para mostrarle, por ejemplo, las opciones restringidas).
+
 * auth()->user() obtiene el objeto del usuario autenticado, con lo que podemos acceder a sus atributos:
 
 ````php
