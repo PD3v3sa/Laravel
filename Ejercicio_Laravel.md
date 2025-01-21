@@ -2,7 +2,7 @@
 # Metainformació del document
 title: Laravel 
 titlepage: true
-subtitle: Vida y Milagros
+subtitle: Ejercicio de clase
 author:
 - Pepe Devesa
 lang: va
