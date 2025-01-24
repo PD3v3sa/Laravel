@@ -63,7 +63,7 @@ pandoc-latex-environment:
 # Relaciones entre modelos
 En esta sesión veremos qué tipos de relaciones se pueden establecer entre los modelos de la aplicación, y cómo se reflejan automáticamente en la base de datos. Para ello, Eloquent permite definir relaciones de varios tipos entre tablas. Éstas se definen a través de los distintos modelos involucrados en la relación, como veremos a continuación.
 
-## Relaciones uno a muchos o one to many
+## Relaciones 1:n o one to many
 Para ilustrar esta relación veamos nuestro ejemplo: 
 supongamos que tenemos los modelos `Autor` y `Libro` , de modo que un autor puede tener varios libros, y un libro está asociado a un autor. 
 
@@ -131,7 +131,7 @@ Route::get('relacionPrueba', function() {
 @empty
     <li>No se encontraron libros</li>
 @endforelse
-`````
+````
 \begin{figure}
 \centering
 \subfigure[Relacion uno a muchos]{\includegraphics[width=0.5\linewidth]{../img/1an.png}}
@@ -155,8 +155,8 @@ public function index()
     $libros = Libro::with('autor')->get();
     return view('libros.index', compact('libros'));
 }
-`````
-# Relaciones muchos a muchos o many to many
+````
+# Relaciones n:n o many to many
 Estas relaciones son más difíciles de plasmar, ya que es necesario contar con una tercera tabla que relacione las dos tablas afectadas. Pero vayamos por partes...
 Para ilustrar este caso, supongamos los modelos `profesor` e `imparte` , de modo que un profesror puede tener
 impartir varias asignaturas, y una asignatura puede ser impartida porvarios profesores. Definimos un método en el modelo
@@ -177,11 +177,11 @@ Así ya podremos acceder a los asignaturas de un profesor:
 En este caso, al otro lado de la relación hacemos lo mismo: 
 definimos un método en el modelo asignatura que
 indique con `belongsToMany que puede pertenecer a varios profesores:
-``````php
+````php
 public function profesores(){
     return $this->belongsToMany(Profesores::class, 'imparte','dni','asignatura');
 }
-``````
+````
 
 A efectos de automatización, es decir, para que Eloquent establezca los nexos de forma automática, si
 queremos establecer una relación muchos a muchos entre un modelo  `A` y otro `B` , se asume que existirá
@@ -196,36 +196,84 @@ intermedia que los relaciona. En ese caso, hacemos uso del atributo `pivot` , pr
 tabla o modelo intermedio entre los dos relacionados. Por ejemplo, si quisiéramos obtener la fecha de
 creación de la relación entre un usuario y un rol, podríamos hacer esto:
 
-``````php
+````php
 $profesores = asignatura::findOrFail($id)->asignaturas;
 for($profesores as $profesor)
 {
     echo $profesor->pivot->created_at;
 }
-``````
-
-# SQL
-
-Debemos agregar al controlador, la importación de la clase `DB`.
-
-````php
-use Illuminate\Support\Facades\DB;
-`````
-Creamos la consulta en un `string`, se la incluimos a la función `select( )` y por ultimo retornamos el resultado.
-
-````php
-use Illuminate\Support\Facades\DB;
-
-class ProductController extends Controller
-{
-    public function index()
-    {
-        $sql = 'SELECT * FROM products';
-        $products = DB::select($sql);
-        return $products;
-    }
-}
 ````
 
-Para consultas de base de datos con la libreria `facade`[Database: Query Builder
-](https://laravel.com/docs/10.x/queries)
+# Uno a Uno (1:1)
+
+Suponemos que tenemos dos modelos *Usuario* y *Telefoneo* , de forma que podemos establecer una relación uno en uno entre ellos: 
+
+* un usuario tiene un teléfono, y un teléfono pertenece a un usuario. 
+
+Para reflejar esta relación en tablas, una de las dos tendría que tener una referencia a la otra. En este caso, podríamos tener un campo usuario_id en la tabla de *telefonos* que indica a quién pertenece este teléfono. Es importante que el campo se diga usuario_id , como veremos a continuación. Para indicar que un usuario tiene un teléfono, añadimos un nuevo método en el modelo de Usuario , que se llame igual que el modelo con el cual queremos conectar (telefoneo , en este caso):
+
+````php
+class Usuario extends Model
+{
+	public function telefono()
+	{
+		return $this->hasOne('App\Models\Telefono');
+	}
+}
+````
+Ahora, si queremos obtener el teléfono de un usuario, basta con que hacemos esto:
+
+````php
+$telefono = Usuario::findOrFail($id)->telefono;
+````
+Hemos empleado una característica de *Eloquent* denominada propiedades dinámicas, por la cual podemos referenciar un método de relación como sí sería una propiedad (en lugar de usar telefoneo() , hemos empleado telefoneo ). 
+
+La instrucción anterior obtiene el objeto Telefono asociado con el usuario buscado (a través del **$id del usuario**). Para que esta asociación tenga efecto, hace falta que en la tabla **telefonos** exista un campo **usuario_id** y que se corresponda con un campo **id** de la tabla de **usuarios** , de forma que *Eloquent* establece la conexión entre una y otra mesa. 
+
+Tendremos que definir una nueva migración de modificación sobre la tabla telefonos para añadir ese nuevo campo, o refrescar la migración original con él y borrar los contenidos previos. Si queremos utilizar otros campos diferentes en una y otra tabla para conectarlas, tenemos que indicar dos parámetros más al llamar a *hasOne* . Por ejemplo, así relacionaríamos las dos tablas anteriores, indicando que la clave ajena de *telefonos* es idUsuario , y que la clave local a la cual se referencia en usuarios es codigo :
+
+````php
+return $this->hasOne('App\Models\Telefono', 'idUsuario', 'codigo');
+````
+También es posible obtener la relación inversa, es decir, a partir de un teléfono, obtener el usuario al cual pertenece. Para lo cual, añadimos un método en el modelo Telefoneo y empleamos el método **belongsTo** para indicar a qué modelo se asocia:
+
+````php
+class Telefono extends Model
+{
+	public function usuario()
+	{
+		return $this->belongsTo('App\Models\Usuario');
+	}
+}
+````
+Nuevamente, podemos especificar otros nombres de clave pasando parámetros adicionales a **belongsTo** , igual que se hace para **hasOne**. De este modo, si queremos obtener el usuario a partir del teléfono, podemos hacerlo así:
+
+````php
+$usuario = Telefono::findOrFail($idTelefono)->usuario;
+````
+
+## Guardar dades relacionades
+Suponemos que queremos guardar un usuario con su teléfono asociado. Podemos simplemente guardar el *id* del teléfono como un campo más del usuario:
+
+````php
+    // Buscamos el teléfono que queremos asociar
+    // (suponiendo que existe previamente)
+    $telefono = Telefono::findOrFail($idTelefono);
+    $usuario = new Usuario();
+    $usuario->nombre = "Pepe";
+    $usuario->email = "pepe@gmail.com";
+    $usuario->telefono_id = $telefono->id;
+    $usuario->save();
+````
+Pero, además, podemos vincular ambos objetos en la relación, usando el método **associate** , de este modo:
+
+````php
+    // Buscamos el teléfono que queremos asociar
+    // (suponiendo que existe previamente)
+    $telefono = Telefono::findOrFail($idTelefono);
+    $usuario = new Usuario();
+    $usuario->nombre = "Pepe";
+    $usuario->email = "pepe@gmail.com";
+    $usuario->telefono()->associate($telefono);
+    $usuario->save();
+````
