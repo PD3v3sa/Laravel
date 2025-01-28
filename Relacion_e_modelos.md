@@ -156,13 +156,13 @@ public function index()
     return view('libros.index', compact('libros'));
 }
 ````
-# Relaciones n:n o many to many
+## Relaciones n:n o many to many
 Estas relaciones son más difíciles de plasmar, ya que es necesario contar con una tercera tabla que relacione las dos tablas afectadas. Pero vayamos por partes...
 Para ilustrar este caso, supongamos los modelos `profesor` e `imparte` , de modo que un profesror puede tener
 impartir varias asignaturas, y una asignatura puede ser impartida porvarios profesores. Definimos un método en el modelo
 `profesor` que utilice el método `belongsToMany` para indicar con qué otro modelo se relaciona:
 
-```php
+````php
  class Profesores extends Model
 {
     use HasFactory;
@@ -193,6 +193,7 @@ public function show(string $id)
 En este caso, al otro lado de la relación hacemos lo mismo: 
 definimos un método en el modelo asignatura que
 indique con `belongsToMany` que puede pertenecer a varios profesores:
+
 ````php
 class Asignaturas extends Model
 {
@@ -239,7 +240,7 @@ for($profesores as $profesor)
 }
 ````
 
-# Uno a Uno (1:1)
+## Uno a Uno (1:1)
 
 Suponemos que tenemos dos modelos *Usuario* y *Telefoneo* , de forma que podemos establecer una relación uno en uno entre ellos: 
 
