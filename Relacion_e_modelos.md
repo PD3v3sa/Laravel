@@ -163,25 +163,60 @@ impartir varias asignaturas, y una asignatura puede ser impartida porvarios prof
 `profesor` que utilice el método `belongsToMany` para indicar con qué otro modelo se relaciona:
 
 ```php
- public function asignaturas(){
-        return $this->belongsToMany(Asignaturas::class, 'imparte','dni','asignatura');
+ class Profesores extends Model
+{
+    use HasFactory;
+
+    protected $table = 'PROFESORES';
+    
+    protected $primaryKey = 'dni';
+
+    public function asignaturas(){
+        return $this->belongsToMany(Asignaturas::class, 'IMPARTE','dni','asignatura');
+
     }
+}
 ````
 Así ya podremos acceder a los asignaturas de un profesor:
-```php
+````php
+public function show(string $id)
+{
  $profesor = Profesores::find($id);
  $asignaturas = $profesor->asignaturas;
  o
  $asignaturas= Profesores::findOrFail($id)->asignaturas;
-```
+
+         return view(...); ///y lo enviamos
+
+}
+````
 En este caso, al otro lado de la relación hacemos lo mismo: 
 definimos un método en el modelo asignatura que
-indique con `belongsToMany que puede pertenecer a varios profesores:
+indique con `belongsToMany` que puede pertenecer a varios profesores:
 ````php
+class Asignaturas extends Model
+{
+    use HasFactory;
+    protected $table = 'ASIGNATURAS';
+
+    protected $primaryKey = 'codigo';
+
+    //Relationships Many to Many
 public function profesores(){
     return $this->belongsToMany(Profesores::class, 'imparte','dni','asignatura');
 }
+
 ````
+y el resultado:
+
+\begin{figure} 
+\centering 
+\subfigure[Listado profesores]{\includegraphics[width=5cm,angle=30]{../img/profe.png}}
+\subfigure[Listado Asignaturas]{\includegraphics[width=0.3\linewidth]{../img/modulos.png}} 
+\subfigure[Imparten]{\includegraphics[width=6cm,angle=30]{../img/imparten.png}} 
+\caption{Listados.} 
+\end{figure}
+
 
 A efectos de automatización, es decir, para que Eloquent establezca los nexos de forma automática, si
 queremos establecer una relación muchos a muchos entre un modelo  `A` y otro `B` , se asume que existirá
