@@ -21,7 +21,7 @@ toc-depth: 2
 
 # capçalera i peu
 header-left: \thetitle
-header-right: Curs 2023-2024
+header-right: Curs 2024-2025
 footer-left: IES Salvador Gadea
 footer-right: \thepage/\pageref{LastPage}
 
