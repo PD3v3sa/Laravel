@@ -82,9 +82,10 @@ Para simular la inserción y la modificación, vamos a crear dos métodos adicio
 * Un método llamado **editarPrueba**, que recibirá como parámetro un id y modificará el título y contenido del post otros generados aleatoriamente, como en el punto anterior.
 Estos dos métodos (especialmente el primero) nos servirán para crear una serie de posts de prueba que luego nos servirán para probar el listado y la ficha de los posts.
 
-:::important
-los métodos nuevoPrueba y editarPrueba que has creado en PostController NO son métodos estándar de un controlador de recursos, y de ninguna manera estarán disponibles a través de Route::resource en routes/web.php. Por eso debes definir a mano una ruta para cada uno de ellos en ese archivo, a través de Route::get, y esas rutas deben definirse ANTES de la de recursos (Route::resource) porque de lo contrario no se emparejarán correctamente.
-:::
+
+
+> Nota: los métodos nuevoPrueba y editarPrueba que has creado en PostController NO son métodos estándar de un controlador de recursos, y de ninguna manera estarán disponibles a través de Route::resource en routes/web.php. Por eso debes definir a mano una ruta para cada uno de ellos en ese archivo, a través de Route::get, y esas rutas deben definirse ANTES de la de recursos (Route::resource) porque de lo contrario no se emparejarán correctamente. 
+
 
 # Relaciones
 * Crea una relación **uno a muchos** entre el modelo de **Usuario** y el modelo de **Post**, ambos ya existentes en la aplicación, de forma que un post es de un usuario, y un usuario puede tener muchos posts. 
@@ -101,7 +102,7 @@ Ejemplo de ejecución:
 
 \begin{figure}
 \centering
-\subfigure[post]{\includegraphics[width=0.5\linewidth]{../img/post.png}}
+\subfigure[post]{\includegraphics[width=0.7\linewidth]{../img/post.png}}
 \end{figure}
 
 # Auténticación
