@@ -226,14 +226,18 @@ En caso de no existir el archivo `app/Http/Middleware/Authenticate.php` se tendr
 ## Proteger las rutas de acceso restringido
 Ahora que ya tenemos definido el mecanismo de login (controlador con método de autenticación, formulario de login y ruta asociada), podemos proteger aquellas rutas o enlaces que queramos que sean de acceso restringido. Por ejemplo, podemos hacer que las operaciones de creación, borrado y edición de libros (funciones `create`, `store`, `edit`, `update` y `destroy`) sólo estén disponibles para usuarios autenticados. Esto puede hacerse de varias formas.
 
-* Si tenemos una ruta de recursos (`Route::resource`) en el archivo **routes/web.php**, entonces la opción más cómoda es definir un constructor en el controlador asociado (en este caso, LibroController), y especificar qué funciones queremos proteger, bien con only o con except (en este último caso, se protegerán todas las rutas salvo las indicadas en la lista):
+* Si tenemos una ruta de recursos (`Route::resource`) en el archivo **routes/web.php**, entonces la opción más cómoda es definir un constructor en el controlador asociado (en este caso, LibroController), además tendremos que definir `use Illuminate\Routing\Controller`^[I+D Logan], y especificar qué funciones queremos proteger, bien con `only` o con `except` (en este último caso, se protegerán todas las rutas salvo las indicadas en la lista):
 ````php
+...
+use Illuminate\Routing\Controller
+...
 class LibroController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth', 
-            ['only' => ['create', 'store', 'edit', 'update', 'destroy']]);
+    
+        $this->middleware('auth',
+         ['only' => ['create', 'store', 'edit', 'update', 'destroy']]);
     }
 ````
 * Si definimos las rutas sueltas, podemos emplear el método middleware para indicar en cada una si queremos que se aplique el middleware de autenticación:
