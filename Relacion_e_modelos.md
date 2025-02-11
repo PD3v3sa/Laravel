@@ -229,14 +229,23 @@ indicarlo.
 
 En el caso de las relaciones muchos a muchos, es posible que nos interese acceder a algún dato de esa tabla
 intermedia que los relaciona. En ese caso, hacemos uso del atributo `pivot` , predefinido, y que apunta a la
-tabla o modelo intermedio entre los dos relacionados. Por ejemplo, si quisiéramos obtener la fecha de
-creación de la relación entre un usuario y un rol, podríamos hacer esto:
+tabla o modelo intermedio entre los dos relacionados. 
+Por ejemplo, si quisiéramos obtener la fecha de creación de la relación entre un usuario y un rol, podríamos hacer esto:
 
 ````php
 $profesores = asignatura::findOrFail($id)->asignaturas;
 for($profesores as $profesor)
 {
     echo $profesor->pivot->created_at;
+}
+````
+Pero, antes deberiamos añadir en el modelo:
+
+````php
+  //Relationships Many to Many
+public function profesores(){
+    return $this->belongsToMany(Profesores::class, 'imparte','dni','asignatura')
+    ->withTimestamps(); 
 }
 ````
 
