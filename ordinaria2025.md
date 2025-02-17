@@ -60,9 +60,18 @@ pandoc-latex-environment:
 
 
 ...
+:::important
+* Los 2 ejercicios se entregarán por *github*.
+* **Laravel:** eliminiar del fichero gitignore el `.env`.
+* **PHP:** No subir la carpeta de imagenes.
+* En los dos casos hay que subir una captura de pantalla con la ejecución en el fichero README.md.
+:::
+
 # Laravel
 
-Vamos a crear el mantenimiento(_reducido_) del préstamo de libros la **parte lógica** será la siguiente:
+Vamos a crear el mantenimiento(_reducido_) del préstamo de libros...
+
+## En cuanto a la **parte lógica.**
 
 * En primer lugar, si el **usuario es admin** tendrá derecho a toda la funcionalidad del sistema, en caso contrario solo podrá ver los libros que hay en la biblioteca.
 * Tendremos un mantenimiento para **crear nuevos libros** titulo, autor, editorial y carátula(_dirección url_)
@@ -114,7 +123,42 @@ Lista de socios con un enlace a su historial de préstamos(_misma pantalla que p
 
 * **Listado de préstamos**
 
+ Nada
+
+## En cuanto a la **parte técnica**.
+
+1. Crearemos los `modelos`y `controladores` pertinentes.
+2. Organizar las distintas vistas que creéis en carpetas.
+3. utilizar una `plantilla` para el diseño de las vistas.
+4. Crear las `migraciones` para, usuario(login,password),libros(id,titulo,autor,editorial y las fechas), socios(id,nombre,email,y las fechas), prestamos(libro_id,socio_id).
+5. Crear los `seeder` y los `faker` para los socios al menos 10. También para el usuario(admin,admin)
+6. Si es el usuario `admin` indicarlo en la barra `navs`. 
+7. Implementar la opción de `cerrar e iniciar sesión`.
+8. Tanto en el **Historial de préstamos** como en **Préstamos** debe de aparcer el nombre del libro y/o usuario, respectivamente, como en las imagenes.
+9. El diseño es orientativo.
+10. Para subir a `github` eliminiar del archivo `.env`
+
+# PHP
+
+Vamos a Realizar un mantenimiento como el de la figura:
+
 \begin{figure}
       \centering
-      \subfigure[Listado de Préstamos]{\includegraphics[width=0.7\linewidth]{../img/listPrestec.png}}
+      \subfigure[PHP]{\includegraphics[width=0.7\linewidth]{../img/phpcrud.png}}
       \end{figure}
+
+**Se os pide:**
+
+Tenéis que hacer el mantenimiento solo de `actualizar` datos del empleado y el `borrado`.
+
+## Parte lógica
+1. El diseño tiene que ser idéntico, puede variar color o algún detalle. pero tanto la lista de empleados como la ficha debe de estar todo en la misma pantalla.
+2. Se os proporciona script con modelo y datos de los empeados.
+3. Las imagenes son cosa vuestra.
+
+## Parte Técnica
+1. Tendréis que tener utilizar la técnica del `MVC`, todo organizado en carpetas y bien estructurado. La estructura debe seguir el siguiente modelo:
+\begin{figure}
+\centering
+\subfigure[MVC]{\includegraphics[width=0.3\linewidth]{../img/mvc.png}}
+\end{figure}
