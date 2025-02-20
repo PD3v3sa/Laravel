@@ -65,6 +65,7 @@ pandoc-latex-environment:
 * **Laravel:** eliminiar del fichero gitignore el `.env`.
 * **PHP:** No subir la carpeta de imagenes.
 * En los dos casos hay que subir una captura de pantalla con la ejecución en el fichero README.md.
+* Los 2 ejercicios valen 10 puntos,cada uno, hay que sacar un 4 en cada uno para hacer la media.
 :::
 
 # Laravel
@@ -124,6 +125,10 @@ Lista de socios con un enlace a su historial de préstamos(_misma pantalla que p
 * **Listado de préstamos**
 
  Nada
+ 
+* **API**
+
+Generar una API para la descraga de los libros de la biblioteca.
 
 ## En cuanto a la **parte técnica**.
 
