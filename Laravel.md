@@ -163,26 +163,93 @@ Como hemos comentado, podemos gestionar muy cómodamente los proyectos Laravel d
 
 ![IDE](./img/ide.png){width=80%}
 
-## Estructura de un proyecto Laravel
+# Estructura de un proyecto Laravel
 
  Los proyectos Laravel se pueden gestionar abriendo la carpeta directamente desde nuestro IDE (Visual Studio Code). Cuando creamos un proyecto Laravel, se crea una estructura de carpetas y archivos predefinida. Explicamos ahora brevemente en qué consisten las principales carpetas y archivos que se generan.
  
- * `app:` contiene el código fuente de la aplicación. Gran parte de las clases que definamos estarán en esta carpeta. Inicialmente, se incluyen algunas subcarpetas dentro: 
-    * `Console :` para definir nuestros propios comandos 
-    * `Exceptions :` para definir nuestras propias excepciones 
-    * `Http :` contiene los controladores y el middleware 
-    * `Models :` almacena los modelos de datos de la aplicación (clases que se utilizarán para gestionar los objetos que intervienen en el sistema). 
-    * `Providers :` contiene los proveedores de servicios de la aplicación, más los que podamos definir nosotros. 
-    * Además, podemos definir aquí otras carpetas que podamos necesitar. Por ejemplo, en versiones anteriores de Laravel se creaba aquí a mano la carpeta Models para gestionar los modelos de datos.
-* `bootstrap :` contiene el archivo app.php , que es el que pone en marcha la aplicación. Además, contiene la carpeta cache , donde se almacenan los archivos ya cargados por Laravel para acelerar su acceso en futuras peticiones. 
-* `config :` contiene los archivos de configuración de la aplicación, donde se tienen variables de entorno, o si nuestra aplicación está en desarrollo o producción, o los parámetros de conexión a la base de datos, entre otras cosas. 
-* `database :` almacena los elementos de gestión de la base de datos, tales como generadores de objetos, migraciones, etc. 
-* `public :` contenido visible de la web. Contiene el archivo index.php , punto de entrada de todas las peticiones a la web, y además podemos definir o generar carpetas donde ubicar el contenido estático del cliente (imágenes, hojas de estilo CSS, archivos JavaScript...).
-* `resources :` contiene, por un lado, las vistas de nuestra aplicación. Por otro lado, también contiene archivos no compilados de CSS (archivos sass) y JavaScript (archivos sin minimizar u optimizar). Además, también almacena los archivos de traducción, en el caso de que queramos hacer sitios multi idioma. 
-* `routes :` almacena las rutas de la aplicación, tanto para acceder a contenido web normal (web.php), como para servicios web (api.php), como para comandos y otras opciones. storage : contiene las vistas compiladas, y otros archivos generados por Laravel, como los logs o las sesiones.
-* `test :` para almacenar los tests o pruebas sobre los componentes de nuestra aplicación.
-* `vendor :` donde se almacenan las dependencias o librerías adicionales que se requieren en nuestro proyecto Laravel. Esta carpeta debería ser ignorada por Git, y regenerada cada vez que se clone el repositorio remoto, para evitar almacenar demasiada información innecesaria.
-Aunque algunos de los conceptos vistos aquí pueden no estar claros aún (como el concepto de middleware, o los proveedores de servicios), los iremos viendo poco a poco durante el curso.
+## Elementos Principales de Laravel (MVC)
+
+| Carpeta / Archivo | Elemento MVC | Descripción |
+| :--- | :--- | :--- |
+| `app/Models/` | **Modelo (M)** | Modelos de la base de datos. Ej: `User.php`. |
+| `resources/views/` | **Vista (V)** | Plantillas Blade que generan el HTML. |
+| `app/Http/Controllers/` | **Controlador (C)** | Lógica que maneja las peticiones HTTP. |
+| `routes/web.php` | **Enrutador / Rutas** | Archivo donde se definen las rutas para clientes web. |
+
+# Estructura Completa de Archivos y Carpetas en Laravel
+
+## Otras carpetas y archivos importantes
+
+| Carpeta/Archivo | Descripción detallada |
+| :--- | :--- |
+| `app/` | Contiene la lógica de la aplicación: controladores, modelos, middleware. |
+| `bootstrap/` | Carga inicial de la aplicación. Incluye `app.php`. |
+| `config/` | Archivos de configuración de todo el sistema: base de datos, correo, sesiones, etc. |
+| `database/` | Contiene migraciones, seeders y fábricas de datos para pruebas. |
+| `public/` | Carpeta pública servida por Nginx. Contiene `index.php`, CSS, JS públicos. |
+| `storage/` | Archivos generados automáticamente: logs, caché, ficheros temporales, subidas de usuarios. |
+| `tests/` | Tests unitarios y funcionales para automatizar comprobaciones del proyecto. |
+| `.env` | Archivo oculto que define las variables de entorno (configuraciones sensibles). |
+| `vendor/` | Carpeta generada por Composer que contiene todas las dependencias del proyecto. |
+| `artisan` | Comando CLI propio de Laravel para realizar tareas de desarrollo dentro del proyecto. |
+| `composer.json` | Archivo que define todas las dependencias PHP del proyecto (gestor Composer). |
+
+---
+
+## Desglose de Subcarpetas Principales
+
+### Dentro de `app/`
+
+| Carpeta/Archivo | Descripción |
+| :--- | :--- |
+| `Http/` | Contiene controladores y middleware. |
+| `Models/` | Contiene los modelos de la base de datos. |
+| `Console/` | Contiene comandos personalizados de Artisan. |
+
+### Dentro de `config/`
+
+| Carpeta/Archivo | Descripción |
+| :--- | :--- |
+| `app.php` | Configuración de la aplicación. |
+| `database.php` | Configuración de la base de datos. |
+| `mail.php` | Configuración del correo electrónico. |
+| `session.php` | Configuración de sesiones. |
+| `auth.php` | Configuración de autenticación. |
+
+### Dentro de `database/`
+
+| Carpeta/Archivo | Descripción |
+| :--- | :--- |
+| `migrations/` | Archivos que definen la estructura de las tablas de la base de datos. |
+| `seeders/` | Archivos que permiten poblar la base de datos con datos iniciales. |
+| `factories/` | Archivos que permiten crear datos de prueba para los modelos. |
+
+### Dentro de `storage/`
+
+| Carpeta/Archivo | Descripción |
+| :--- | :--- |
+| `app/` | Archivos subidos por los usuarios. |
+| `framework/` | Archivos generados automáticamente por Laravel. |
+| `logs/` | Archivos de registro de errores y eventos. |
+
+### Dentro de `tests/`
+
+| Carpeta/Archivo | Descripción |
+| :--- | :--- |
+| `Feature/` | Tests funcionales que comprueban el comportamiento de la aplicación. |
+| `Unit/` | Tests unitarios que comprueban la lógica de los modelos y controladores. |
+
+### Dentro de `public/`
+
+| Carpeta/Archivo | Descripción |
+| :--- | :--- |
+| `css/` | Archivos CSS públicos. |
+| `js/` | Archivos JavaScript públicos. |
+| `index.php` | Punto de entrada a la aplicación. |
+| `favicon.ico` | Icono de la página web. |
+| `robots.txt` | Archivo que indica a los motores de búsqueda qué páginas indexar. |
+| `htaccess` | Archivo de configuración de Apache (no usado en nuestro caso). |
+
 
 ## Configuración general del proyecto.
 De entre la estructura de carpetas de un proyecto Laravel vista anteriormente, echaremos ahora un rápido vistazo a dónde se encuentra la configuración general del proyecto. Por un lado, disponemos de un archivo `.env` en la raíz del proyecto, que básicamente contiene una serie de variables de entorno generales. Por ejemplo, se tiene la variable `APP_NAME` con el nombre que queremos que tenga la aplicación, o un conjunto de variables que utilizaremos más adelante para conectar con la base de datos, entre otras cosas:
@@ -255,3 +322,147 @@ Conectando a la URL que se nos facilita, veremos la pantalla de inicio de nuestr
    Estos pasos no los veremos.
 
 :::
+# Node.js
+
+A pesar de que podría parecer que Node.js es un ecosistema diferente a Laravel, lo cierto es que con la instalación de Node se incorpora una herramienta muy útil en cualquier aplicación web que utilice librerías JavaScript, como puedan ser Bootstrap o jQuery. Es la herramienta **NPM (Node Package Manager)**, que permite instalar de forma sencilla estas librerías en cualquier proyecto.
+
+**Versión requerida:** es recomendable tener instalada la última versión LTS (Long Term Support). En la última versión de estos apuntes, dicha versión es la `16.x`.
+
+Para instalar Node en cualquiera de los sistemas que estamos contemplando (Linux, Windows o Mac OSX) podemos optar por:
+
+*   Instalarlo a través del instalador correspondiente.
+
+*   Utilizar la herramienta **NVM (Node Version Manager)**. Esta herramienta nos va a permitir tener más de una versión de Node instalada, y poder elegir en todo momento cuál de ellas es la que queremos tener activa.
+
+:::tip
+
+**Nota:** En el caso de Windows, la herramienta NVM que podemos utilizar no es la “oficial”, pero sí existe una especie de clon alternativo funcional.
+
+:::
+---
+
+## 5.1. Instalación en Linux
+
+En el caso de distribuciones Linux, como es el caso de la máquina virtual proporcionada, podemos optar por ejecutar un instalador o por usar NVM. En la versión completa de la máquina virtual proporcionada se ha optado por esta última opción (NVM), pero damos aquí los pasos a seguir para ambas opciones.
+
+### Opción de instalador
+Si optamos por instalar Node.js a través de un instalador, los pasos a seguir son:
+
+1. En primer lugar, si no tenemos instalada la herramienta `curl`, la instalamos con:
+   ```bash
+   sudo apt-get install curl
+   ```
+2. Después, utilizamos `curl` para recuperar la versión de Node que queramos (versión LTS actual, `16.x`):
+   ```bash
+   curl -sL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+   ```
+3. Finalmente, instalamos Node.js:
+   ```bash
+   sudo apt-get install -y nodejs
+   ```
+
+Si quisiéramos actualizar la versión de Node.js en un futuro, bastaría con repetir los dos últimos comandos, poniendo en el paso 2 la versión a obtener en este caso.
+
+### Opción de NVM
+Podemos consultar información de esta herramienta en su web oficial en GitHub. Para instalarla, debemos descargarla con el comando `curl` o `wget`, según se explica en la propia web de GitHub.
+
+Si optamos por `wget`, el comando es como sigue (en una sola línea):
+```bash
+wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+```
+
+En el caso de no disponer del comando `wget` instalado, podemos o bien instalarlo, o bien emplear este otro comando equivalente, con la orden `curl` (también en una sola línea):
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+```
+
+::tip
+ **NOTA:** El número de versión `v0.39.1` puede variar. Es preferible consultar la web de GitHub para obtener el comando actualizado.
+ **NOTA:** Después de ejecutar el comando anterior, será necesario cerrar el terminal y volverlo a abrir para poder utilizar el comando `nvm`. Si sigue sin reconocer el comando, quizá debamos actualizar con `source ~/.bashrc`.
+:::
+
+---
+
+## 5.2. Instalación en Mac OSX
+
+Para distribuciones Mac OSX, tenemos igualmente la opción de usar un instalador o la herramienta NVM.
+
+### Opción de instalador
+El instalador de Node.js para Mac OSX es muy sencillo. Lo descargamos de la web oficial de Node y lo lanzamos. Si queremos actualizar versión en un futuro, basta con volver a descargar esa última versión y lanzar el instalador correspondiente para actualizarla.
+
+### Opción NVM
+Para utilizar NVM en Mac OSX seguimos los mismos pasos que para Linux, comentados anteriormente, pero en este caso para actualizar el terminal ejecutaremos:
+```bash
+source ~/.bash_profile
+```
+
+---
+
+## 5.3. Instalación en Windows
+
+### Opción de instalador
+El instalador de Node.js para Windows es igualmente muy sencillo. Lo descargamos de la web oficial de Node y lo lanzamos. Si queremos actualizar versión en un futuro, basta con volver a descargar esa última versión y lanzar el instalador correspondiente para actualizarla.
+
+### Opción NVM
+Como comentábamos, la herramienta NVM oficial sólo está disponible para sistemas Unix, por lo que funciona en Linux y Mac OSX, pero no en Windows. Como alternativa, existe alguna implementación paralela de nvm que podemos hacer servir, como [esta](https://github.com). 
+
+Podemos descargar un instalador (`nvm-setup.zip`) y ejecutarlo para instalar este gestor. Después, desde línea de comandos tendremos disponibles una serie de comandos para gestionar las versiones de Node, como veremos a continuación.
+
+---
+
+## 5.4. Utilizando NVM
+
+Si hemos optado por instalar Node a través de `nvm`, tendremos disponibles una serie de comandos en el terminal para instalar y gestionar las versiones de Node. Aquí resumimos los más importantes.
+
+### Linux y Mac OSX
+En el caso de estos sistemas, habremos instalado la versión oficial de NVM, y los comandos que podemos utilizar son estos:
+
+*   `nvm install node`: Instala la última versión disponible de Node.
+*   `nvm install --lts`: Instala la última versión LTS disponible.
+*   `nvm install 12.16.0`: Instala la versión especificada de Node.
+*   `nvm uninstall 12.16.0`: Desinstala la versión especificada de Node.
+*   `nvm ls-remote`: Muestra todas las versiones disponibles para instalar.
+*   `nvm list`: Muestra todas las versiones instaladas localmente.
+*   `nvm current`: Muestra la versión actualmente activa.
+*   `nvm use 12.16.0`: Marca la versión indicada como actualmente activa.
+*   `nvm use --lts`: Marca como activa la última versión LTS instalada.
+
+En nuestro caso, vamos a instalar la última versión LTS disponible, ya que éstas son las versiones que tienen soporte a largo plazo. Por lo tanto, ejecutaremos los comandos:
+```bash
+nvm install --lts
+nvm use --lts
+```
+
+:::note
+
+ **NOTA:** El comando `nvm use` normalmente no es necesario, ya que la instalación automáticamente deja como activa la versión que elegimos. Pero si el terminal no termina de reconocer el comando `node` puede ser necesario ejecutarla.
+:::
+
+### Windows
+En el caso de Windows con la versión alternativa de NVM, los comandos son ligeramente diferentes:
+
+*   `nvm install 12.16.0`: Instala la versión especificada de Node.
+*   `nvm uninstall 12.16.0`: Desinstala la versión especificada de Node.
+*   `nvm list`: Muestra todas las versiones instaladas localmente.
+*   `nvm list available`: Muestra todas las versiones disponibles para instalar con esta adaptación de NVM.
+*   `nvm use 12.16.0`: Marca como activa la versión de Node especificada (previamente instalada).
+
+Para instalar la versión LTS disponible, tendremos que ver su número en la web oficial de Node, y luego ejecutar el comando correspondiente. Por ejemplo:
+```cmd
+nvm install 16.16.0
+nvm use 16.16.0
+```
+
+---
+
+## 5.5. Prueba de Node
+
+Podemos ejecutar ahora el siguiente comando en el terminal y comprobar que nos muestra el número de versión adecuado:
+```bash
+node -v
+```
+
+También podemos ejecutar el comando para comprobar la versión que se ha instalado del gestor NPM (que no tiene por qué coincidir con la de Node):
+```bash
+npm -v
+```
